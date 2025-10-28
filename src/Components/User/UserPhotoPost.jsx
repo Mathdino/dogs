@@ -3,17 +3,17 @@ import styles from "./UserPhotoPost.module.css";
 import Input from "../../Components/Forms/Input";
 import Button from "../../Components/Forms/Button";
 import UseForm from "../../Hooks/UseForm";
-import UseFetch from "../../Hooks/UseFetch";
 import { PHOTO_POST } from "../../api";
 import Error from "../../Components/Helper/Error";
 import { useNavigate } from "react-router-dom";
+import useFetch from "../../Hooks/useFetch";
 
 const UserPhotoPost = () => {
   const nome = UseForm();
   const peso = UseForm("number");
   const idade = UseForm("number");
   const [img, setImg] = React.useState({});
-  const { data, loading, error, request } = UseFetch();
+  const { data, loading, error, request } = useFetch();
   const navigate = useNavigate();
 
   React.useEffect(() => {
