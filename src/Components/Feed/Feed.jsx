@@ -1,10 +1,13 @@
 import React from "react";
+import FeedModal from "./FeedModal";
+import FeedPhotos from "./FeedPhotos";
 
 const Feed = () => {
   return (
-    <section className="container">
-      <h2>Feed</h2>
-    </section>
+    <div>
+      <FeedModal />
+      <FeedPhotos />
+    </div>
   );
 };
 
