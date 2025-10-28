@@ -17,10 +17,6 @@
   cursor: pointer;
 }
 
-.photo img {
-  grid-area: 1/1;
-}
-
 .photo > div {
   grid-area: 1/1;
 }
