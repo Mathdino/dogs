@@ -1,23 +1,29 @@
 import React from "react";
+import { UserContext } from "../../UserContext";
 import styles from "./PhotoComments.module.css";
-import { Link } from "react-router-dom";
+import PhotoCommentsForm from "./PhotoCommentsForm";
 
-const PhotoComments = ({ id, comments }) => {
+const PhotoComments = (props) => {
+  const { login } = React.useContext(UserContext);
+  const [comments, setComments] = React.useState(() => props.comments);
+  const commentsSection = React.useRef(null);
+
+  React.useEffect(() => {
+    commentsSection.current.scrollTop = commentsSection.current.scrollHeight;
+  }, [comments]);
+
   return (
-    <div className={styles.comments}>
-      <ul>
+    <>
+      <ul ref={commentsSection} className={styles.comments}>
         {comments.map((comment) => (
-          <li key={comment.id}>
-            <p>
-              <span>
-                <Link to={`/perfil/${comment.author}`}>{comment.author}</Link>
-              </span>
-              {comment.comment}
-            </p>
+          <li key={comment.comment_ID}>
+            <b>{comment.comment_author}: </b>
+            <span>{comment.comment_content}</span>
           </li>
         ))}
       </ul>
-    </div>
+      {login && <PhotoCommentsForm id={props.id} setComments={setComments} />}
+    </>
   );
 };
 
