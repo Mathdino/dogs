@@ -24,11 +24,14 @@ const LoginPasswordLost = () => {
   }
 
   return (
-    <section>
+    <section className="animeLeft">
       <h1 className="title">Perdeu a Senha ?</h1>
-      <Head title="Perdeu a Senha" description="Recuperação de senha do usuário" />
+      <Head
+        title="Perdeu a Senha"
+        description="Recuperação de senha do usuário"
+      />
       {data ? (
-        <p style={{ color: "#4c1" }}>{data}</p> 
+        <p style={{ color: "#4c1" }}>{data}</p>
       ) : (
         <form onSubmit={handleSubmit}>
           <Input label="Email / Usuário" type="text" name="login" {...login} />
