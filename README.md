@@ -1,16 +1,87 @@
-# React + Vite
+# Dogs — App React que consome API externa
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação React (Vite) que consome a API pública Dogs (`https://dogsapi.origamid.dev/json`) para autenticação, cadastro de usuários, postagem de fotos, listagem em feed, comentários e estatísticas. O projeto utiliza rotas protegidas, hooks customizados e gerenciamento simples de sessão via `localStorage`.
 
-Currently, two official plugins are available:
+## Tecnologias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React + Vite
+- React Router (`react-router-dom`)
+- Hooks customizados (`useFetch`, `useForm`, `UseMedia`)
+- CSS Modules
 
-## React Compiler
+## API Externa
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Base: `https://dogsapi.origamid.dev/json`
+- Endpoints principais (ver `src/api.jsx`):
+  - `POST /jwt-auth/v1/token` — autenticação; retorna `token`
+  - `POST /jwt-auth/v1/token/validate` — validação do token
+  - `GET /api/user` — dados do usuário autenticado
+  - `POST /api/user` — criação de usuário
+  - `POST /api/photo` — envio de foto (FormData, header `Authorization`)
+  - `GET /api/photo/:id` — detalhes de foto
+  - `GET /api/photo/?_page&_total&_user` — feed de fotos
+  - `POST /api/comment/:id` — comentar na foto
+  - `DELETE /api/photo/:id` — excluir foto
+  - `GET /api/stats` — estatísticas do usuário
 
-## Expanding the ESLint configuration
+Headers de autenticação: `Authorization: Bearer <token>`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Fluxo de Autenticação
+
+- Login (`UserContext.userLogin`):
+  - Envia `{ username, password }` para `TOKEN_POST`
+  - Salva `token` no `localStorage` e busca dados via `USER_GET`
+  - Redireciona para `/conta`
+- Auto-login: valida token salvo com `TOKEN_VALIDATE_POST`
+- Logout: limpa estado e `localStorage`
+- Rotas protegidas: `Components/Helper/ProtectedRoute` só renderiza filhos se `login === true`
+
+## Funcionalidades
+
+- Cadastro e login de usuário
+- Recuperação e reset de senha
+- Feed de fotos com paginação simples
+- Modal de foto com detalhes e comentários
+- Postagem de foto (`/conta/postar`) com `FormData` (campo `img` via `img.raw`)
+- Estatísticas do usuário (`/conta/estatisticas`)
+- Layout responsivo (menu mobile via `UseMedia`)
+
+## Hooks e Padrões
+
+- `useFetch`: gerencia requisições (`data`, `loading`, `error`, `request`) e trata erros retornando mensagens amigáveis
+- `useForm`: validação de campos (`email`, `password`, `number`); integra com inputs e exibe mensagens
+- `UseMedia`: observa `matchMedia` para habilitar comportamentos responsivos
+
+## Instalação e Execução
+
+1. Requisitos: Node.js LTS
+2. Instalar dependências:
+   ```bash
+   npm install
+   ```
+3. Ambiente de desenvolvimento (HMR):
+   ```bash
+   npm run dev
+   ```
+   Abra a URL exibida pelo Vite (ex.: `http://localhost:5173` ou porta alternativa)
+4. Build de produção:
+   ```bash
+   npm run build
+   ```
+5. Preview do build:
+   ```bash
+   npm run preview
+   ```
+
+## Estrutura
+
+- `src/api.jsx`: definição da base URL e dos endpoints
+- `src/UserContext.jsx`: estado global de autenticação, auto-login e navegação
+- `src/Components`: páginas e componentes (Feed, Login, User, Photo, Helper)
+- `src/Hooks`: hooks customizados
+
+## Observações
+
+- O token JWT é persistido em `localStorage`
+- Erros de rede e API são encaminhados para componentes `Error` via hooks
+- Favicon: o arquivo está em `public/favicon.ico`; o `index.html` referencia `./favicon.ico` (Vite serve de `public/` automaticamente)
