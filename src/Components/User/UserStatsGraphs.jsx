@@ -5,6 +5,15 @@ import { VictoryPie, VictoryChart, VictoryBar } from "victory";
 const UserStatsGraphs = ({ data }) => {
   const [graph, setGraph] = React.useState([]);
   const [total, setTotal] = React.useState(0);
+  const colors = [
+    "#4D96FF",
+    "#6BCB77",
+    "#FFD93D",
+    "#FF6B6B",
+    "#845EC2",
+    "#00C2A8",
+    "#FF9671",
+  ];
 
   React.useEffect(() => {
     const graphData = data.map((item) => {
@@ -28,6 +37,7 @@ const UserStatsGraphs = ({ data }) => {
       <div className={styles.graphItem}>
         <VictoryPie
           data={graph}
+          colorScale={colors}
           innerRadius={50}
           padding={{ top: 20, bottom: 20, left: 80, right: 80 }}
           style={{
@@ -45,7 +55,15 @@ const UserStatsGraphs = ({ data }) => {
       </div>
       <div className={styles.graphItem}>
         <VictoryChart>
-          <VictoryBar alignment="start" data={graph}></VictoryBar>
+          <VictoryBar
+            alignment="start"
+            data={graph}
+            style={{
+              data: {
+                fill: ({ index }) => colors[index % colors.length],
+              },
+            }}
+          ></VictoryBar>
         </VictoryChart>
       </div>
     </section>
